@@ -21,7 +21,7 @@
  */
 class Solution {
 public:
-    TreeNode* formtree(vector<int>tree,int start,int end){
+    TreeNode* formtree(vector<int>&tree,int start,int end){
         if(start>end){
             return NULL;
         }
