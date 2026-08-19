@@ -29,15 +29,23 @@ public:
         if(two)tail->next=two;
         return dummy.next;
     }
+    ListNode* mergeklist(vector<ListNode*>lists,int start,int end){
+        if(start==end){
+            return lists[start];
+        }
+        if(start+1==end){
+            return merge(lists[start],lists[end]);
+        }
+        int mid = (start+end)/2;
+        ListNode* left = mergeklist(lists,start,mid);
+        ListNode* right = mergeklist(lists,mid+1,end);
+        return merge(left,right);
+    }
     ListNode* mergeKLists(vector<ListNode*>& lists){
         if(lists.empty())return NULL;
         if(lists.size()==1){
             return lists[0];
         }
-        ListNode* newhead = merge(lists[0],lists[1]);
-        for(int i=2;i<lists.size();i++){
-            newhead = merge(newhead,lists[i]);
+        return mergeklist(lists,0,lists.size()-1);
         }
-        return newhead;
-    }
 };
