@@ -9,28 +9,56 @@
  *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
  * };
  */
+class node{
+    public:
+    int sums;
+    int nodes;
+    node(int val){
+        sums=val;
+        nodes=1;
+    }
+};
 class Solution {
 public:
-    void calculate(TreeNode* root,int& sums,int& nodes){
-        if(!root)return;
-        calculate(root->left,sums,nodes);
-        calculate(root->right,sums,nodes);
-        nodes++;
-        sums+=root->val;
-    }
-    void checknodes(TreeNode* root,int& node){
-        if(!root)return;
-        int sums=0,nodes=0;
-        calculate(root,sums,nodes);
-        if(sums/nodes == root->val){
-            node++;
+    node* calculate(TreeNode* root,int& total){
+        if(!root->left && !root->right){
+            node* head =  new node(root->val);
+            if(head->sums/head->nodes == root->val){
+                total++;
+            }
+            return head;
+        }else if(!root->right){
+            node* head = calculate(root->left,total);
+            head->sums += root->val;
+            head->nodes++;
+            if(head->sums/head->nodes == root->val){
+                total++;
+            }
+            return head;
+        }else if(!root->left){
+            node* head = calculate(root->right,total);
+            head->sums += root->val;
+            head->nodes++;
+            if(head->sums/head->nodes == root->val){
+                total++;
+            }
+            return head;
         }
-        checknodes(root->left,node);
-        checknodes(root->right,node);
+        else{
+            node* left = calculate(root->left,total);
+            node* right = calculate(root->right,total);
+            node* head = new node(root->val);
+            head->sums+=left->sums+right->sums;
+            head->nodes += left->nodes+right->nodes;
+            if(head->sums/head->nodes == root->val){
+                total++;
+            }
+            return head;
+        }
     }
     int averageOfSubtree(TreeNode* root) {
         int node = 0;
-        checknodes(root,node);
+        calculate(root,node);
         return node;
     }
 };
