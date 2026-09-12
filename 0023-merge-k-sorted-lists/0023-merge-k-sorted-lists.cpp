@@ -8,44 +8,34 @@
  *     ListNode(int x, ListNode *next) : val(x), next(next) {}
  * };
  */
+class compare{
+    public:
+    bool operator()(ListNode* a,ListNode* b){
+        return a->val > b->val;
+    }
+};
 class Solution {
 public:
-    ListNode* merge(ListNode* one,ListNode* two){
-        ListNode dummy(0);
-        ListNode* tail= &dummy;
-        while(one && two){
-            if(one->val>two->val){
-                tail->next=two;
-                two=two->next;
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+        vector<ListNode*>temp;
+        for(int i=0;i<lists.size();i++){
+            if(lists[i]){
+                temp.push_back(lists[i]);
             }
-            else{
-                tail->next=one;
-                one=one->next;
-            }
-            tail=tail->next;
         }
-        if(one)tail->next=one;
-
-        if(two)tail->next=two;
+        if(temp.empty())return NULL;
+        priority_queue<ListNode*,vector<ListNode*>,compare>p(temp.begin(),temp.end());
+        ListNode dummy(0);
+        ListNode* tail = &dummy;
+        while(!p.empty()){
+            ListNode* temp = p.top();
+            p.pop();
+            tail->next=temp;
+            tail=tail->next;
+            if(temp->next){
+                p.push(temp->next);
+            }
+        }
         return dummy.next;
     }
-    ListNode* mergeklist(vector<ListNode*>lists,int start,int end){
-        if(start==end){
-            return lists[start];
-        }
-        if(start+1==end){
-            return merge(lists[start],lists[end]);
-        }
-        int mid = (start+end)/2;
-        ListNode* left = mergeklist(lists,start,mid);
-        ListNode* right = mergeklist(lists,mid+1,end);
-        return merge(left,right);
-    }
-    ListNode* mergeKLists(vector<ListNode*>& lists){
-        if(lists.empty())return NULL;
-        if(lists.size()==1){
-            return lists[0];
-        }
-        return mergeklist(lists,0,lists.size()-1);
-        }
 };
