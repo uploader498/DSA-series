@@ -1,11 +1,5 @@
 class Solution {
 public:
-    string answer(unordered_map<string,string>&map,string temp){
-        if(map.count(temp)){
-            return map[temp];
-        }
-        return "?";
-    }
     string evaluate(string s, vector<vector<string>>& knowledge) {
         string ans = "";
         unordered_map<string,string>map;
@@ -20,7 +14,11 @@ public:
                     temp+=s[i];
                     i++;
                 }
-                ans += answer(map,temp);
+                if(map.count(temp)){
+                    ans += map[temp];
+                }else{
+                    ans += "?";
+                }
             }else{
             ans+=s[i];
             }
